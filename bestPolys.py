@@ -40,16 +40,16 @@ class polyStorage(object):
                 polyStorageList.append(self)
 
 def isPrime(x):
-    for i in range(2,1+int(math.sqrt(x))):
-        if x%i == 0:
+    for i in xrange(int(math.sqrt(x))):
+        if x%(i+2) == 0:
            return False
     return True
 
-def testPoly(q,array):
+def testPoly(q, array):
     maxArray = array[-1]
     score = 0
-    for x in range(1,len(array)):
-        value = q(x)
+    for x in xrange(len(array)-1):
+        value = q(x+1)
         if value>maxArray:
            break
         elif value in array:

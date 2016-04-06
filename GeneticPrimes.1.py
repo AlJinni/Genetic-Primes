@@ -22,7 +22,7 @@ sub=[0]*100*generation
 quadsVars=[]
 quads=[0] * generation
 
-fileName=os.path.basename(__file__)
+fileName=os.path.abspath(__file__)
 
 if (generation>1):
     ID0=fileName.split(".")
@@ -99,9 +99,9 @@ def cloneFunction():
         newFunction.close()
         subprocess.Popen(["python", name])
 
-        time.sleep(10)
+        time.sleep(100)
 
-if generation<5:
+if generation<15:
     cloneFunction()
 else:
     dataPath = "/Users/jadtayl/Desktop/Programming/Genetic-Primes/PrimeFunctions/Data/"

@@ -1,21 +1,168 @@
 from __future__ import division
-import random, sys, os, tempfile, subprocess, math
+import sys, os, tempfile, subprocess, numpy
 
 generation=1
 
 import time
 fileName=os.path.basename(__file__)
 
-polyStorageList=[]
-compKlau=[]
+#Call complete program with metaKlaubber(limit)
+
+#An array of values for the q function to return
+qFunction = (6, 10, 12, 14, 15, 18, 20, 21, 22, 24, 26, 28, 30, 33, 34, 35, 36, 38, 39, 40, 42, 44, 45, 46, 48, 50, 51, 52, 54, 55, 56, 57, 58, 60, 62, 63, 65, 66, 68, 69, 70, 72, 74, 75, 76, 77, 78, 80,
+82, 84, 85, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 98, 99, 100, 102, 104, 105, 106, 108, 110, 111, 112)
+
+#Indexes at ZERO: Limit 0<=n<=100: A function that will return the value of q for a given n (see "prime stuffs" google document)
+def q(n):
+    return qFunction[(n-1)]
+
+#Indexes at ONE: Limit 0<n<infinity: A function that will return the value of d for a given n (see "prime stuffs" google document)
+def d(n):
+    if (n==1):
+        return 5
+
+    if (n==2):
+        return 9
+
+    else:
+        if (n%2==0):
+            return 13 + 2*(n-4)
+
+        if (n%2==1):
+            return 7 + 2*(n-3)
+
+
+def fMeta(maxEx):
+    fMetaRay = []
+    if (maxEx<245):
+        return fMetaRay
+    initValue = 0
+    n=0
+    while initValue<maxEx:
+        n=n+1
+        print n
+        Q = q(n)
+        D = d(n)
+        initValue = Q - (Q+D) + Q*41 - n + d(n)
+        latestValue = 0
+        floorN = numpy.floor((n/2)+1)
+        i = 0
+        while 1 == 1:
+            i=i+1
+            if(latestValue<maxEx):
+                fMetaRay.append(int(Q*i*i - (Q+D)*i + Q*41 - floorN + d(n)))
+                fMetaRay.append(int(Q*i*i - (Q-D)*i + Q*41 - floorN))
+                latestValue = int(Q*i*i - (Q-D)*i + Q*41 - floorN)
+
+            else:
+                break
+    return fMetaRay
+
+#Primality test, but accepts 1 as a prime number
+def isPrime(x):
+    for i in range(2,1+int(numpy.sqrt(x))):
+        if x%i == 0:
+           return False
+    return True
+
+
+class Quadratic:
+    def __init__(self, square,linear,constant):
+        self.square = square
+        self.linear = linear
+        self.constant = constant
+
+    def __call__(self, x):
+        return self.square*x*x + self.linear*x + self.constant
+
+    def __repr__(self):
+        return "Quadratic(%d,%d,%d)" % (self.square,self.linear,self.constant)
+
+def klaubberNumArray(r):
+    result = []
+    k = Quadratic(1, -1, 41)
+    for i in range(0,r):
+        result.append(k(i))
+    return result
+
+def meta(n, rang):
+    k = Quadratic(1, -1, 41)
+    metaRay = []
+    if n==1:
+        i = 0
+        while True:
+            metaVar = i * i + 41
+            if (metaVar > rang):
+                break
+            metaRay.append(metaVar)
+            i = i + 1
+    elif n==2:
+        j = 1
+        while True:
+            metaVar = ((j * (j - 1)) / 2) + 82
+            if metaVar > rang:
+                break
+            metaRay.append(metaVar)
+            j = j + 1
+    else:
+        m = 2 * (n-1)
+        metaVarOdd = 1
+        metaVarFact = m
+        prevNum = 41 * n
+        k = 0
+        while True:
+            if prevNum > rang:
+                break
+            metaRay.append(prevNum)
+            k = k + 1
+            prevNum = prevNum + metaVarOdd
+            metaVarOdd = metaVarOdd + 2
+            if prevNum > rang:
+                break
+            metaRay.append(prevNum)
+            prevNum = prevNum + metaVarFact
+            metaVarFact = metaVarFact + m
+    return metaRay
+
+def metaKlaubber(n):
+    global mkAR
+    mkAR=[]
+    r=n+100000
+    while len(mkAR)<n:
+        klauNums = klaubberNumArray(r)
+        metaNums = {}
+        k = 1
+        while True:
+            mm = meta(k,r)
+            if len(mm) == 0:
+                break
+            for m in mm:
+                metaNums[m] = k
+            k = k+1
+        secondaryFilters = fMeta(r)
+        for m in secondaryFilters:
+            metaNums[m] = -1
+        for i in range(len(klauNums)):
+            num = klauNums[i]
+            #print(num)
+            isMeta = metaNums[i] if i in metaNums else None
+            isPrimeNum = isPrime(num)
+            #print(isPrimeNum)
+            if isMeta == None and not isPrimeNum:
+                mkAR.append(i)
+            #print "%d: %s %s %s" % (i,isMeta,isPrimeNum,num)
+    return mkAR
+
 if generation>1:
     filePath=os.path.dirname(__file__)
-    filepath=filePath.split("/")
+    filePath=filePath.split("/")
     if generation<10:
-        filePath=os.path.join(filePath[0:-16])
+        filePath=str(os.path.join(filePath[0:-16]))
+        filePath=filePath.strip("[").strip("]")
     else:
-        filePath=os.path.join(filePath[0:-17])
-    rangePath=os.path.join(filePath, "Quadratic Storage", "Range")
+        filePath=str(os.path.join(filePath[0:-17]))
+        filePath=filePath.strip("[").strip("]")
+    rangePath=os.path.join(filePath, "Quadratic Storage", "range")
     with open(rangePath) as storeEx:
         klauRange=int(storeEx.read())
 
@@ -32,49 +179,31 @@ else:
 quadsArray=[]
 quadsOut=[]
 quadsVars=[]
+compKlau=metaKlaubber(klauRange)
 
-class Quadratic:
-    def __init__(self, square, linear, constant):
-        self.square = square
-        self.linear = linear
-        self.constant = constant
 
-    def __call__(self, x):
-        return self.square*x*x + self.linear*x + self.constant
-
-    def __repr__(self):
-        return "Quadratic(%d,%d,%d)" % (self.square,self.linear,self.constant)
+def progressFunction(cK, r, g):
+    if cK:
+        return (((-100.0)/(r*g))*cK)+100
+    return 0
 
 klauber=Quadratic(1,-1,41)
 
-#Cite: Ben Shahar
-class polyStorage(object):
+polyStorageList=[Quadratic(0,0,0)]*5
+bestScoreList=[0]*5
 
-    def __init__(self,score,s,l,c):
-        assert type(score) == int
-        self.score = score
-        self.square = s
-        self.linear = l
-        self.constant = c
-        if len(polyStorageList) < 5:
-            polyStorageList.append(self)
-        else:
-            scoreList = []
-            for function in polyStorageList:
-                scoreList.append(function.score)
-            minimum = min(scoreList)
-            if minimum < self.score:
-                for index, score in enumerate(scoreList):
-                    if score == minimum:
-                        polyStorageList.remove(polyStorageList[index])
-                        break
-                polyStorageList.append(self)
-
-def isPrime(x):
-    for i in range(2,1+int(math.sqrt(x))):
-        if x%i == 0:
-           return False
-    return True
+def bestList(quadratic, score):
+    lowestScore = 100000
+    lowestIndex = 100000
+    for i in xrange(len(bestScoreList)):
+        if lowestScore > bestScoreList[i]:
+            lowestScore = bestScoreList[i]
+            lowestIndex = i
+    if score > lowestScore:
+        bestScoreList[lowestIndex] = score
+        polyStorageList[lowestIndex] = quadratic
+        return (polyStorageList)
+    return (polyStorageList)
 
 def testPoly(q,array):
     maxArray = array[-1]
@@ -101,17 +230,12 @@ def bestPoly(array, cRange, lRange=None, sRange=None):
             for c in xrange(-cRange, cRange):
                 q = Quadratic(s,l,c)
                 score = testPoly(q, array)
-                qstore=polyStorage(score,s,l,c)
+                bestList(q, score)
                 if score>bestScore:
                     bestScore = score
                     bestQuadratic = q
                     print("best Score %d for %s" % (bestScore, bestQuadratic))
     return bestQuadratic
-i=2
-while len(compKlau)<(klauRange):
-    if not isPrime(klauber(i)):
-        compKlau.append(i)
-    i=i+1
 
 def readFunction():
         global quadsVars
@@ -136,25 +260,31 @@ def readFunction():
                 quadsOut.append(function(i))
         for x in quadsOut:
             quadsOut[quadsOut.index(x)]=abs(x)
-
         for x in quadsOut:
             try:
                 compKlau.remove(x)
             except:
                 pass
+        updateProgress(ID0)
+
+def updateProgress(ID):
+    progressPath=os.path.join(filePath, "Progress Storage", "progress."+".".join(ID)+".txt")
+    newProgress=open(progressPath, "w")
+    newProgress.write(str(progressFunction(len(compKlau), klauRange, generation)))
+    newProgress.close()
 
 bestPoly(compKlau, klauRange)
 
 if generation>1:
     readFunction()
 
-if len(compKlau)>0:
+if len(compKlau)>0 and generation<3:
 
         newtext=open(__file__,"r").read()
         newgen=str(generation+1)
         folderName="Clone Wars/Gen "+newgen
         dirpath = os.path.join(filePath, folderName)
-        newtext=newtext[:95]+newgen+newtext[newtext.find('\n',95):]
+        newtext=newtext[:88]+newgen+newtext[newtext.find('\n',88):]
 
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
