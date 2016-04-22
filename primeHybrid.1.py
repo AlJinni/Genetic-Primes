@@ -4,17 +4,61 @@ import sys, os, tempfile, subprocess, numpy
 generation=1
 
 import time
+from random import randint
+from fractions import gcd
+
 fileName=os.path.basename(__file__)
 
 #Call complete program with metaKlaubber(limit)
 
-#An array of values for the q function to return
-qFunction = (6, 10, 12, 14, 15, 18, 20, 21, 22, 24, 26, 28, 30, 33, 34, 35, 36, 38, 39, 40, 42, 44, 45, 46, 48, 50, 51, 52, 54, 55, 56, 57, 58, 60, 62, 63, 65, 66, 68, 69, 70, 72, 74, 75, 76, 77, 78, 80,
-82, 84, 85, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 98, 99, 100, 102, 104, 105, 106, 108, 110, 111, 112)
+#Indexes at ZERO: Limit 0<=n<infinity: A function that will return the value of q for a given n (see "prime stuffs" google document)
 
-#Indexes at ZERO: Limit 0<=n<=100: A function that will return the value of q for a given n (see "prime stuffs" google document)
-def q(n):
-    return qFunction[(n-1)]
+qFunction=[]
+
+#http://stackoverflow.com/questions/27878137/how-to-check-if-the-number-can-be-represented-prime-power-nth-root-is-prime-or
+def findWitness(n, k=5): # miller-rabin
+    s = 0
+    d = n-1
+    while d % 2 == 0:
+        s = s+1
+        d=d/2
+    for i in xrange(k):
+        a = randint(2, n-1)
+        x = pow(a, int(d), n)
+        if x == 1 or x == n-1: continue
+        for r in xrange(s-1):
+            x = (x * x) % n
+            if x == 1: return a
+            if x == n-1: break
+        else: return a
+    return 0
+
+# returns p,k such that n=p**k, or 0,0
+# assumes n is an integer greater than 1
+
+def primePower(n):
+    def checkP(n, p):
+        k = 0
+        while n > 1 and n % p == 0:
+            n, k = n / p, k + 1
+        if n == 1: return p, k
+        else: return False
+    if n % 2 == 0: return checkP(n, 2)
+    q = n
+    while True:
+        a = findWitness(q)
+        if a == 0: return checkP(n, q)
+        d = gcd(pow(a,q,n)-a, q)
+        if d == 1 or d == q: return False
+        q = d
+
+def q(r):
+    n=2
+    while len(qFunction)<r:
+        if not primePower(n):
+            qFunction.append(n)
+        n=n+1
+    return qFunction[r-1]
 
 #Indexes at ONE: Limit 0<n<infinity: A function that will return the value of d for a given n (see "prime stuffs" google document)
 def d(n):
@@ -40,7 +84,6 @@ def fMeta(maxEx):
     n=0
     while initValue<maxEx:
         n=n+1
-        print n
         Q = q(n)
         D = d(n)
         initValue = Q - (Q+D) + Q*41 - n + d(n)
