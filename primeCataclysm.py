@@ -1,16 +1,34 @@
 import os, shutil
 
-primeFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Clone Wars")
+filePath=os.path.dirname(os.path.abspath(__file__))
+primeFolder = os.path.join(filePath, "Clone Wars")
 bestFiles=[]
 dirGens=[]
 
-def TEST():
-    for direc in os.listdir(primeFolder)[1:]:
-        dirGens.append(int(direc[4:]))
-        dirGens.sort()
-        targetGen=dirGens[-1]
 
-        
+def bestList(quadratic, score):
+    lowestScore = 100000
+    lowestIndex = 100000
+    for i in xrange(len(bestScoreList)):
+        if lowestScore > bestScoreList[i]:
+            lowestScore = bestScoreList[i]
+            lowestIndex = i
+    if score > lowestScore:
+        bestScoreList[lowestIndex] = score
+        polyStorageList[lowestIndex] = quadratic
+        return (polyStorageList)
+    return (polyStorageList)
+
+def TEST():
+    polyStorageList=[0]*5
+    bestScoreList=[0]*5
+
+    for direc in os.listdir(filePath, "Progress Storage"):
+        fileID=direc[10:-4]
+        print fileID
+        progCheck=open(fileID,"r").read()
+        bestList(fileID, int(progCheck))
+
 
 def PURGE():
     print ""

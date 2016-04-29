@@ -30,13 +30,13 @@ class Quadratic:
         self.square = square
         self.linear = linear
         self.constant = constant
-        
+
     def __call__(self, x):
         return self.square*x*x + self.linear*x + self.constant
 
     def __repr__(self):
         return "Quadratic(%d,%d,%d)" % (self.square,self.linear,self.constant)
-    
+
 # Find best ploynomial which matches all terms in array
 
 def bestPoly(array, cRange, lRange=None, sRange=None):
@@ -98,16 +98,16 @@ def kNPsubIP(number, IP):
     for ip in IP:
         array = subPoly(array, ip)
     return array
-    
+
 def repRunEx(number, it):
     tedCruz = [Quadratic(0,0,0)] * it
     for i in xrange(it):
         print(kNPsubIP(number+(i*41), tedCruz))
         tedCruz[i] = bestPoly(kNPsubIP(number+(i*41), tedCruz), 2000, 200, 20)
     print(tedCruz)
-    
-    
-#The following two arrays are for use by the BestList    
+
+
+#The following two arrays are for use by the BestList
 bestQuadList = [Quadratic(0,0,0)] * 5
 
 bestScoreList = [0] * 5
@@ -155,7 +155,7 @@ def bestPolyLoop(kArray, cRange, lRange=None, sRange=None):
  #   tL = []
   #  for i in xRange(layers):
    #     tL += bestPolyLoop(krange, cRange, lRange, sRange)
-        
+
 
 def layerScore(path, krange, cRange, lRange, sRange):
     arrayToTrim = metaKlaubber(krange)
@@ -172,7 +172,7 @@ def layerScore(path, krange, cRange, lRange, sRange):
         #print(arrayToTrim)
         importantPolyList.append(importantPoly)
     return len(arrayToTrim)
-    
+
 def fixedPseudoGenetics(krange, cRange, lRange, sRange, recWidth):
     lowestScore = sys.maxint
     bestTriple = [9999] * 5
@@ -189,26 +189,26 @@ def fixedPseudoGenetics(krange, cRange, lRange, sRange, recWidth):
             for i in xrange(len(path)):
                 bestTriple[i] = path[i]
     return bestTriple
-                    
-                
-        
+
+
+
 #Make an array of the klauberNotPrimes up to the krange
 #Find the top polynomials with bestPolyLoop
 #Call self with first element of array as currentlyExcludedQuads, and with layers = layers - 1
-#If layers = 0 print the string of 
-                
+#If layers = 0 print the string of
+
 ###########################################################################################################################################
 ###########################################################################################################################################
 ###########################################################################################################################################
 ###########################################################################################################################################
 
 #META EXTRACTOR FUNCTIONS BELOW, RETURNS REMAINING VALUES AFTER SUBTRACTION OF THE FIRST TWO INFINITE FAMILIES, CALL WITH metaKlaubber(r)#
-    
+
 ###########################################################################################################################################
 ###########################################################################################################################################
 ###########################################################################################################################################
 ###########################################################################################################################################
-    
+
 #metaKlaubber still needs to be converted
 
 
@@ -231,23 +231,23 @@ def q(n):
 def d(n):
     if (n==1):
         return 5
-    
+
     if (n==2):
-        return 9   
-    
+        return 9
+
     else:
         if (n%2==0):
             return 13 + 2*(n-4)
-        
+
         if (n%2==1):
             return 7 + 2*(n-3)
-        
-    
+
+
 def fMeta(maxEx):
     fMetaRay = []
     if (maxEx<245):
-        return fMetaRay   
-    initValue = 0 
+        return fMetaRay
+    initValue = 0
     n=0
     while initValue<maxEx:
         n=n+1
@@ -263,9 +263,9 @@ def fMeta(maxEx):
                 fMetaRay.append(int(Q*i*i - (Q+D)*i + Q*41 - floorN + d(n)))
                 fMetaRay.append(int(Q*i*i - (Q-D)*i + Q*41 - floorN))
                 latestValue = int(Q*i*i - (Q-D)*i + Q*41 - floorN)
-            
+
             else:
-                break   
+                break
     return fMetaRay
 
 #Primality test, but accepts 1 as a prime number
@@ -284,18 +284,18 @@ def isPrime(n):
 
 class Quadratic:
     __slots__ = ['square', 'linear', 'constant']
-    
+
     def __init__(self, square,linear,constant):
         self.square = square
         self.linear = linear
         self.constant = constant
-        
+
     def __call__(self, x):
         return self.square*x*x + self.linear*x + self.constant
 
     def __repr__(self):
         return "Quadratic(%d,%d,%d)" % (self.square,self.linear,self.constant)
-    
+
 def klaubberNumArray(r):
     result = [0] * r
     k = Quadratic(1, -1, 41)
@@ -369,16 +369,16 @@ def metaKlaubber(r):
             allTheIs.append(i)
         #print "%d: %s %s %s" % (i,isMeta,isPrimeNum,num)
     return allTheIs
-        
-        
 
-    
+
+
+
 donaldTrump = [Quadratic(1,0,41)]
 print(kNPsubIP(200, donaldTrump))
 #bestPoly(kNPsubIP(200, donaldTrump), 2000, 200, 20)
 #repRunEx(82, 3)
-bPath = fixedPseudoGenetics(1400, 1500, 500, 100, 5)
+bPath = fixedPseudoGenetics(1400, 1400, 400, 100, 4)
 print (bPath)
-print layerScore(bPath, 1400, 1500, 500, 100)
+print layerScore(bPath, 1400, 1400, 400, 100)
 
 #1500, 1500, 500, 100

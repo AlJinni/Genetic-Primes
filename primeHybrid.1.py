@@ -13,7 +13,7 @@ fileName=os.path.basename(__file__)
 
 #Indexes at ZERO: Limit 0<=n<infinity: A function that will return the value of q for a given n (see "prime stuffs" google document)
 
-qFunction=[]
+qFunction=[6]
 
 #http://stackoverflow.com/questions/27878137/how-to-check-if-the-number-can-be-represented-prime-power-nth-root-is-prime-or
 def findWitness(n, k=5): # miller-rabin
@@ -53,7 +53,7 @@ def primePower(n):
         q = d
 
 def q(r):
-    n=2
+    n=qFunction[-1]+1
     while len(qFunction)<r:
         if not primePower(n):
             qFunction.append(n)
@@ -86,7 +86,7 @@ def fMeta(maxEx):
         n=n+1
         Q = q(n)
         D = d(n)
-        initValue = Q - (Q+D) + Q*41 - n + d(n)
+        initValue = Q*41 - n
         latestValue = 0
         floorN = numpy.floor((n/2)+1)
         i = 0
@@ -193,6 +193,8 @@ def metaKlaubber(n):
             #print(isPrimeNum)
             if isMeta == None and not isPrimeNum:
                 mkAR.append(i)
+            if len(mkAR)>=n:
+                break
             #print "%d: %s %s %s" % (i,isMeta,isPrimeNum,num)
     return mkAR
 

@@ -1,7 +1,7 @@
 from random import randint
 from fractions import gcd
 
-qFunction=[]
+qFunction=[6]
 #http://stackoverflow.com/questions/27878137/how-to-check-if-the-number-can-be-represented-prime-power-nth-root-is-prime-or
 def findWitness(n, k=5): # miller-rabin
     s = 0
@@ -40,7 +40,7 @@ def primePower(n):
         q = d
 
 def q(r):
-    n=2
+    n=qFunction[-1]+1
     while len(qFunction)<r:
         if not primePower(n):
             qFunction.append(n)
