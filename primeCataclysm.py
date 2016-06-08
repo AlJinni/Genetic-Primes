@@ -2,7 +2,8 @@ import os, shutil
 
 filePath=os.path.dirname(os.path.abspath(__file__))
 primeFolder = os.path.join(filePath, "Clone Wars")
-bestFiles=[]
+bestFiles=[0]*3
+bestProgress=[0]*3
 dirGens=[]
 
 
@@ -14,10 +15,10 @@ def bestList(quadratic, score):
             lowestScore = bestScoreList[i]
             lowestIndex = i
     if score > lowestScore:
-        bestScoreList[lowestIndex] = score
-        polyStorageList[lowestIndex] = quadratic
-        return (polyStorageList)
-    return (polyStorageList)
+        bestProgress[lowestIndex] = score
+        bestFiles[lowestIndex] = quadratic
+        return (bestFiles)
+    return (bestFiles)
 
 def TEST():
     polyStorageList=[0]*5

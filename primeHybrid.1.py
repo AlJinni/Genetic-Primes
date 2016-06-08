@@ -279,7 +279,7 @@ def bestPoly(array, cRange, lRange=None, sRange=None):
                 if score>bestScore:
                     bestScore = score
                     bestQuadratic = q
-                    print("best Score %d for %s" % (bestScore, bestQuadratic))
+                    ("best Score %d for %s" % (bestScore, bestQuadratic))
     return bestQuadratic
 
 def readFunction():
